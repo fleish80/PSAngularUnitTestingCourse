@@ -8,6 +8,7 @@
     "build": "ng build --prod",
     "start": "ng serve",
     "test": "ng test",
+    "test-nsm":  "ng test --source-map=false",
     "lint": "tslint ./src/**/*.ts -t verbose",
     "e2e": "ng e2e"
   },
