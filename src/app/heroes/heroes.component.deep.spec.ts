@@ -1,10 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HeroesComponent } from './heroes.component';
-import { HeroComponent } from '../hero/hero.component';
-import { HeroService } from '../hero.service';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
+import { of } from 'rxjs';
+import { HeroService } from '../hero.service';
+import { HeroComponent } from '../hero/hero.component';
+import { HeroesComponent } from './heroes.component';
+import { Directive, Input, HostListener } from '@angular/core';
+
+@Directive({
+  // tslint:disable-next-line:directive-selector
+  selector: '[routerLink]'
+})
+export class RouterLinkStubDirective {
+  @Input('routerLink') linkParams: any;
+  navigateTo: any = null;
+
+  @HostListener('click')
+  onClick() {
+    this.navigateTo = this.linkParams;
+  }
+}
 
 describe('HeroesComponent (deep tests', () => {
   let fixture: ComponentFixture<HeroesComponent>;
@@ -23,9 +37,8 @@ describe('HeroesComponent (deep tests', () => {
       { id: 3, name: 'SuperDude', strength: 55 }
     ];
     TestBed.configureTestingModule({
-      declarations: [HeroesComponent, HeroComponent],
-      providers: [{ provide: HeroService, useValue: mockHeroService }],
-      schemas: [NO_ERRORS_SCHEMA]
+      declarations: [HeroesComponent, HeroComponent, RouterLinkStubDirective],
+      providers: [{ provide: HeroService, useValue: mockHeroService }]
     });
     fixture = TestBed.createComponent(HeroesComponent);
   });
@@ -105,7 +118,8 @@ describe('HeroesComponent (deep tests', () => {
     addButton.triggerEventHandler('click', null);
     fixture.detectChanges();
 
-    const heroText = fixture.debugElement.query(By.css('ul')).nativeElement.textContent;
+    const heroText = fixture.debugElement.query(By.css('ul')).nativeElement
+      .textContent;
     expect(heroText).toContain(name);
   });
 });
