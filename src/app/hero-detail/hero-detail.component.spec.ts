@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { HeroService } from '../hero.service';
 import { HeroDetailComponent } from './hero-detail.component';
@@ -41,10 +41,19 @@ describe('HeroDetailComponent', () => {
     expect(fixture.nativeElement.querySelector('h2').textContent).toContain('SUPERDUDE');
   });
 
-  it ('should call updateHero when save is called', (done) => {
+  it ('should call updateHero when save is called using tick', fakeAsync(() => {
     mockHeroService.updateHero.and.returnValue(of({}));
     fixture.detectChanges();
     fixture.componentInstance.save();
+    tick(250);
     expect(mockHeroService.updateHero).toHaveBeenCalled();
-  });
+  }));
+
+  it ('should call updateHero when save is called using flush', fakeAsync(() => {
+    mockHeroService.updateHero.and.returnValue(of({}));
+    fixture.detectChanges();
+    fixture.componentInstance.save();
+    flush();
+    expect(mockHeroService.updateHero).toHaveBeenCalled();
+  }));
 });
