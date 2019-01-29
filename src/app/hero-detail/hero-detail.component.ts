@@ -44,6 +44,14 @@ export class HeroDetailComponent implements OnInit {
    }, 250);
   }
 
+  saveWithPromise(): void {
+    const p = new Promise((resolve) => {
+      this.heroService.updateHero(this.hero)
+      .subscribe(() => this.goBack());
+      resolve();
+    });
+  }
+
   // function debounce(func, wait, immediate) {
   //   var timeout;
   //   return function() {
